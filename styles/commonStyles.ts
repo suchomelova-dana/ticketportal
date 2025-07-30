@@ -43,4 +43,14 @@ export const commonStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
 });

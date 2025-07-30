@@ -4,7 +4,7 @@ import { View, Text } from "../Themed";
 import { Controller, FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { Team } from "@/types/Team";
 import { useAppStore } from "@/store/useAppStore";
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'react-native-uuid';
 import { AddPlayerForm } from "./AddPlayerForm";
 import { commonStyles } from "@/styles/commonStyles";
 
@@ -26,7 +26,7 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
 
     const onDialogSave: SubmitHandler<Omit<Team, "id">> = useCallback((data) => {
         const newItem :Team = {
-            id: uuidv4(),
+            id: uuid.v4(),
             ...data,
         };
 
@@ -78,18 +78,18 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
                     <AddPlayerForm />
                 </FormProvider>
 
-                <View style={styles.buttonRow}>
+                <View style={commonStyles.buttonRow}>
                     <Pressable
                         style={{...commonStyles.button, backgroundColor: "gray"}}
                         onPress={onDialogCancel}
                     >
-                        <Text style={styles.buttonText}>Zrušit</Text>
+                        <Text style={commonStyles.buttonText}>Zrušit</Text>
                     </Pressable>
                     <Pressable
                         style={{...commonStyles.button, backgroundColor: "blue"}}
                         onPress={form.handleSubmit(onDialogSave)}
                     >
-                        <Text style={styles.buttonText}>Přidat</Text>
+                        <Text style={commonStyles.buttonText}>Přidat</Text>
                     </Pressable>
                 </View>
                 </View>
@@ -98,16 +98,3 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
 
     )
 }
-
-const styles = StyleSheet.create({
-  buttonRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 10,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-});

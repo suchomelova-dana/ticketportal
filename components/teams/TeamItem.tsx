@@ -15,9 +15,9 @@ export function TeamItem({team}: Props) {
     const playersCount = useMemo(() => team.players.length, [team])
 
     return (
-        <View style={{ paddingBottom: 10, flexDirection: "row", gap: 10  }}>
+        <View style={{ paddingBottom: 10, flexDirection: "row" }}>
             <Text>{team.name}</Text>
-            <Text>{playersCount}</Text>
+            <Text style={{ paddingLeft: 10 }}>{playersCount}</Text>
             <Pressable onPress={() => removeTeam(team.id)}>
                 <Text style={{ ...commonStyles.button, color: "red"}}>Odstranit</Text>
             </Pressable>

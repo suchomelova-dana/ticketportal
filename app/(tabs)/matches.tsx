@@ -1,29 +1,25 @@
-import { StyleSheet } from 'react-native';
-
+import { Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
+import { commonStyles } from '@/styles/commonStyles';
+import { MatchesList } from '@/components/matches/MatchesList';
+import { AddMatchDialog } from '@/components/matches/AddMatchDialog';
+import { useState } from 'react';
 
 export default function MatchesPage() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Matches</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+    <View style={commonStyles.container}>
+      <Text style={commonStyles.title}>Matches</Text>
+      <View style={commonStyles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+      <MatchesList />
+
+      <Pressable style={commonStyles.button} onPress={() => setIsDialogOpen(true)}>
+          <Text>Přidat zápas</Text>
+      </Pressable>
+
+      <AddMatchDialog isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
