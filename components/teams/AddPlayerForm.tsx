@@ -1,32 +1,37 @@
-import { Pressable, TextInput, StyleSheet } from "react-native";
+import { Pressable, TextInput } from "react-native";
 import { View, Text } from "../Themed";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
-import { Team } from "@/types/Team";
 import { commonStyles } from "@/styles/commonStyles";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 
 export function AddPlayerForm() {
-
     const { control } = useFormContext();
-
     const [newPlayer, setNewPlayer] = useState('');
     const [playerValidationError, setPlayerValidationError] = useState<string | null>(null)
+
+    const showAddPlayerButton = !Boolean(playerValidationError);
+    const showValidationError = Boolean(playerValidationError);
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'players',
     });
 
-    const onAddPlayer = () => {
+    const onAddPlayer = useCallback(() => {
         if (newPlayer.length > 2) {
             append(newPlayer);
             setNewPlayer('');
+        }
+    }, [newPlayer.length]);
+
+    useEffect(() => {
+        if (newPlayer.length > 2) {
             setPlayerValidationError(null)
         } else {
             setPlayerValidationError('Player musí mít alespoň 2 znaky')
-        }
-    }
+        }   
+    }, [newPlayer])
 
     return (
         <>
@@ -37,19 +42,11 @@ export function AddPlayerForm() {
                         <Controller
                             control={control}
                             name={`players.${index}`}
-                            rules={{ 
-                            required: 'Jméno hráče je povinné',
-                            minLength: {
-                                value: 2,
-                                message: 'Musí mít alespoň 2 znaky',
-                            },
-                            }}
-                            render={({ field: { onChange, value } }) => (
+                            render={({ field }) => (
                             <TextInput
                                 style={commonStyles.input}
                                 placeholder={'Jméno hráče'}
-                                value={value}
-                                onChangeText={onChange}
+                                {...field}
                             />
                             )}
                         />
@@ -67,17 +64,18 @@ export function AddPlayerForm() {
                     onChangeText={setNewPlayer}
                     placeholder="Nový hráč"
                 />
-                <Pressable onPress={onAddPlayer}>
-                    <Text style={{ color: 'green', padding: 5 }}>Přidat</Text>
-                </Pressable>
                 {
-                    playerValidationError && <Text style={{color: "red"}}>Musí mít alespoň 2 znaky</Text>
+                    showAddPlayerButton && (
+                        <Pressable onPress={onAddPlayer}>
+                            <Text style={{ color: 'green', padding: 5 }}>Přidat</Text>
+                        </Pressable>    
+                    )
+                }
+                
+                {
+                    showValidationError && <Text style={{color: "red"}}>{playerValidationError}</Text>
                 }
             </View>
-
-            <Pressable onPress={() => append('')}>
-                <Text>+ Přidat hráče</Text>
-            </Pressable>
       </>
     )
 }

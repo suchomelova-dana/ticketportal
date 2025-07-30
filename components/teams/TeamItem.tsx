@@ -1,7 +1,9 @@
 import { Text, View } from '@/components/Themed';
 import { useAppStore } from '@/store/useAppStore';
+import { commonStyles } from '@/styles/commonStyles';
 import { Team } from '@/types/Team';
-import { FlatList, Pressable } from 'react-native';
+import { useMemo } from 'react';
+import { Pressable } from 'react-native';
 
 type Props = {
     team: Team
@@ -10,26 +12,14 @@ type Props = {
 export function TeamItem({team}: Props) {
 
     const removeTeam = useAppStore(state => state.removeTeam);
+    const playersCount = useMemo(() => team.players.length, [team])
 
     return (
-        <View style={{ paddingBottom: 10 }}>
+        <View style={{ paddingBottom: 10, flexDirection: "row", gap: 10  }}>
             <Text>{team.name}</Text>
-            <FlatList
-                data={team.players}
-                keyExtractor={(item) => item}
-                contentContainerStyle={{ paddingVertical: 20 }}
-                renderItem={({ item }) => (
-                    <Text>{item}</Text>
-                )}
-                ListEmptyComponent={
-                    <Text style={{ textAlign: 'center', color: '#666' }}>
-                        Žádní hráči
-                    </Text>
-                }
-                style={{marginLeft: 10}}
-            />
+            <Text>{playersCount}</Text>
             <Pressable onPress={() => removeTeam(team.id)}>
-                <Text style={{ color: "red"}}>Odstranit</Text>
+                <Text style={{ ...commonStyles.button, color: "red"}}>Odstranit</Text>
             </Pressable>
         </View>
     )

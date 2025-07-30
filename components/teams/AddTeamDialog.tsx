@@ -14,7 +14,6 @@ type Props = {
 }
 
 export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
-
     const addTeam = useAppStore(state => state.addTeam)
 
     const form = useForm<Omit<Team, "id">>({
@@ -31,11 +30,15 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
             ...data,
         };
 
-        console.log(newItem)
         addTeam(newItem);
-        setIsDialogOpen(false);
         form.reset();
+        setIsDialogOpen(false);
     }, [addTeam, form])
+
+    const onDialogCancel = useCallback(() => {
+      form.reset();
+      setIsDialogOpen(false);
+    }, [form, setIsDialogOpen]);
 
     return (
        <Modal
@@ -43,12 +46,11 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
             transparent
             onRequestClose={() => setIsDialogOpen(false)}
         >
-            <View style={styles.overlay}>
-                <View style={styles.modalContainer}>
-                <Text style={styles.title}>Přidání nového týmu</Text>
+            <View style={commonStyles.overlay}>
+                <View style={commonStyles.modalContainer}>
+                <Text style={commonStyles.title}>Přidání nového týmu</Text>
 
                 <FormProvider {...form}>
-
                     <Text style={{fontWeight: 'bold'}}>Jméno týmu</Text>
                     <Controller
                         control={form.control}
@@ -74,18 +76,17 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
                     />
 
                     <AddPlayerForm />
-
                 </FormProvider>
 
                 <View style={styles.buttonRow}>
                     <Pressable
-                        style={[styles.button, styles.buttonCancel]}
-                        onPress={() => setIsDialogOpen(false)}
+                        style={{...commonStyles.button, backgroundColor: "gray"}}
+                        onPress={onDialogCancel}
                     >
                         <Text style={styles.buttonText}>Zrušit</Text>
                     </Pressable>
                     <Pressable
-                        style={[styles.button, styles.buttonSubmit]}
+                        style={{...commonStyles.button, backgroundColor: "blue"}}
                         onPress={form.handleSubmit(onDialogSave)}
                     >
                         <Text style={styles.buttonText}>Přidat</Text>
@@ -99,43 +100,11 @@ export function AddTeamDialog({isDialogOpen, setIsDialogOpen}: Props) {
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 20,
-    elevation: 5, 
-    shadowColor: '#000',
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-  },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     gap: 10,
     marginTop: 10,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  buttonCancel: {
-    backgroundColor: '#999',
-  },
-  buttonSubmit: {
-    backgroundColor: '#007AFF',
   },
   buttonText: {
     color: 'white',
