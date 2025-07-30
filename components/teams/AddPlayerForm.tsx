@@ -4,6 +4,7 @@ import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { commonStyles } from "@/styles/commonStyles";
 import { useCallback, useEffect, useState } from "react";
 
+const MIN_PLAYER_NAME_LENGTH = 2;
 
 export function AddPlayerForm() {
     const { control } = useFormContext();
@@ -19,14 +20,14 @@ export function AddPlayerForm() {
     });
 
     const onAddPlayer = useCallback(() => {
-        if (newPlayer.length > 2) {
+        if (newPlayer.length > MIN_PLAYER_NAME_LENGTH) {
             append(newPlayer);
             setNewPlayer('');
         }
     }, [newPlayer.length]);
 
     useEffect(() => {
-        if (newPlayer.length > 2) {
+        if (newPlayer.length > MIN_PLAYER_NAME_LENGTH) {
             setPlayerValidationError(null)
         } else {
             setPlayerValidationError('Player musí mít alespoň 2 znaky')
